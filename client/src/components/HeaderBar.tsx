@@ -1,7 +1,8 @@
-import React from 'react'
 import { useI18n } from '@/context/I18nContext'
 import { useServer } from '@/context/ServerContext'
 import { useActive } from '@/context/ActiveContext'
+import { useTheme } from '@/context/ThemeContext'
+import { Sun, Moon } from 'lucide-react'
 
 type Props = {
   wsServer: string
@@ -9,6 +10,7 @@ type Props = {
 
 export function HeaderBar ({ wsServer }: Props) {
   const { t, locale, setLocale, available } = useI18n()
+  const { theme, toggleTheme } = useTheme()
   const { androidDevices } = useServer()
   const { syncAll, syncMain, syncTargets, activeUdid } = useActive()
   const logoSrc = 'https://solumate.vn/logo_gold.png'
@@ -30,6 +32,9 @@ export function HeaderBar ({ wsServer }: Props) {
       </div>
 
       <div className='headerRight'>
+        <button className='themeToggle' onClick={toggleTheme} title={t('Đổi giao diện')}>
+          {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+        </button>
         <div className={`headerStat ${syncAll ? 'on' : 'off'}`}>
           <div className='headerStatLabel'>{t('Sync')}</div>
           <div className='headerStatValue'>{syncAll ? t('Bật') : t('Tắt')}</div>

@@ -99,7 +99,18 @@ export function App () {
   const [deviceFilter, setDeviceFilter] = useState<'all' | 'usb' | 'wifi'>(
     'all'
   )
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem('sidebarCollapsed') === 'true'
+  })
+
+  useEffect(() => {
+    if (sidebarCollapsed) {
+      document.body.classList.add('sidebarCollapsed')
+    } else {
+      document.body.classList.remove('sidebarCollapsed')
+    }
+    localStorage.setItem('sidebarCollapsed', String(sidebarCollapsed))
+  }, [sidebarCollapsed])
   const [remoteDevices, setRemoteDevices] = useState<
     Array<{ udid: string; type: 'usb' | 'wifi' | 'unknown' }>
   >([])
@@ -826,12 +837,12 @@ export function App () {
         <button
           className='rcpCollapseBtn'
           aria-label={sidebarCollapsed ? t('Mở rộng') : t('Thu gọn')}
-          onClick={() => setSidebarCollapsed(true)}
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
         >
           {sidebarCollapsed ? (
-            <ChevronsLeft size={18} strokeWidth={2} />
+            <ChevronsLeft size={16} strokeWidth={2} />
           ) : (
-            <ChevronsRight size={18} strokeWidth={2} />
+            <ChevronsRight size={16} strokeWidth={2} />
           )}
         </button>
         <div className='rcpContent'>

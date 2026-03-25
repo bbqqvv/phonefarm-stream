@@ -8,6 +8,7 @@ import { readHashAction, readPageParams } from '@/lib/params';
 import { ShellPage } from '@/pages/ShellPage';
 import { FileListingPage } from '@/pages/FileListingPage';
 import { I18nProvider } from '@/context/I18nContext';
+import { ThemeProvider } from '@/context/ThemeContext';
 
 // Fix mobile rotation / address-bar resize issues by mapping the *visual* viewport height
 // to a CSS variable. Some browsers keep `100vh` stale after orientation changes.
@@ -37,23 +38,25 @@ if (window.location.pathname.startsWith('/docs')) {
 
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-      <I18nProvider>
-        {hashAction.action === 'shell' ? (
-          <ShellPage wsServer={wsServer} udid={hashAction.params.get('udid') || ''} />
-        ) : hashAction.action === 'list-files' ? (
-          <FileListingPage
-            wsServer={wsServer}
-            udid={hashAction.params.get('udid') || ''}
-            initialPath={hashAction.params.get('path') || '/'}
-          />
-        ) : (
-          <ActiveProvider>
-            <ServerProvider wsServer={wsServer}>
-              <App />
-            </ServerProvider>
-          </ActiveProvider>
-        )}
-      </I18nProvider>
+      <ThemeProvider>
+        <I18nProvider>
+          {hashAction.action === 'shell' ? (
+            <ShellPage wsServer={wsServer} udid={hashAction.params.get('udid') || ''} />
+          ) : hashAction.action === 'list-files' ? (
+            <FileListingPage
+              wsServer={wsServer}
+              udid={hashAction.params.get('udid') || ''}
+              initialPath={hashAction.params.get('path') || '/'}
+            />
+          ) : (
+            <ActiveProvider>
+              <ServerProvider wsServer={wsServer}>
+                <App />
+              </ServerProvider>
+            </ActiveProvider>
+          )}
+        </I18nProvider>
+      </ThemeProvider>
     </React.StrictMode>,
   );
 }
